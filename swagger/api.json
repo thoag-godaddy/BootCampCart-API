@@ -60,7 +60,6 @@
                 ],
                 "summary": "Return the list of products in the database",
                 "description": "Return the list of products in the database",
-                "operationId": "getProducts",
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -100,7 +99,6 @@
                 ],
                 "summary": "Return a single product from the database",
                 "description": "Return a single product from the database",
-                "operationId": "getProduct",
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -129,7 +127,6 @@
                 ],
                 "summary": "Delete a single product from the database",
                 "description": "Delete a single product from the database",
-                "operationId": "deleteProduct",
                 "responses": {
                     "204": {
                         "description": "Deleted successfully"
@@ -153,7 +150,6 @@
                 ],
                 "summary": "Return the list of CartItems in the database",
                 "description": "Return the list of CartItems in the database",
-                "operationId": "getCartItems",
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -222,7 +218,6 @@
                 ],
                 "summary": "Return a single CartItem from the database",
                 "description": "Return a single CartItem from the database",
-                "operationId": "CartItem",
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -251,7 +246,7 @@
                 ],
                 "summary": "Delete a single CartItem from the database",
                 "description": "Delete a single CartItem from the database",
-                "operationId": "deleteCartItem",
+                ,
                 "responses": {
                     "204": {
                         "description": "Deleted successfully"
