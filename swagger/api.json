@@ -246,7 +246,6 @@
                 ],
                 "summary": "Delete a single CartItem from the database",
                 "description": "Delete a single CartItem from the database",
-                ,
                 "responses": {
                     "204": {
                         "description": "Deleted successfully"
