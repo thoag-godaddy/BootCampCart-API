@@ -17,7 +17,6 @@ class CartItems:
             name=new_cartitem["name"],
             price=new_cartitem["price"],
             quantity=new_cartitem["quantity"],
-            product_id=new_cartitem["product_id"],
         )
         new_model.save()
         resp.media = model_to_dict(new_model)
