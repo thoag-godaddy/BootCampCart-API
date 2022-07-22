@@ -98,7 +98,6 @@ class DatabaseCartItem(BaseModel):
     sale_price = DoubleField(null=True)
     quantity = IntegerField(default=1, null=True)
 
-
 class DatabaseNote(BaseModel):
     id = AutoField(primary_key=True)
     url = CharField()

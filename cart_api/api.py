@@ -18,6 +18,7 @@ cart_items = CartItems()
 note = Note()
 note_list = NoteList()
 
+
 # Define our API's routes
 api.add_route("/heartbeat", hb)
 api.add_route("/v1/products/{product_id:int}", product)
