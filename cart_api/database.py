@@ -11,6 +11,8 @@ from playhouse.postgres_ext import (
     CharField,
     DoubleField,
     BooleanField,
+    IntegerField,
+    ArrayField
 )
 
 database = os.environ.get("POSTGRES_DB", "bootcamp")
@@ -87,6 +89,26 @@ class DatabaseProducts(BaseModel):
 # Define an ORM class called DatabaseCartItem which inherits from BaseModel
 # and has the properties and types defined by your swagger spec.
 # if neccesary, update EXAMPLE_CART_ITEM in cart_api_tests/test_exercises.py to match
+class DatabaseCartItem(BaseModel):
+    id = AutoField(primary_key=True)
+    name = CharField()
+    image_url = CharField(null=True)
+    price = DoubleField()
+    is_on_sale = BooleanField(default=False)
+    sale_price = DoubleField(null=True)
+    quantity = IntegerField(default=1, null=True)
+
+
+class DatabaseNote(BaseModel):
+    id = AutoField(primary_key=True)
+    url = CharField()
+    title = CharField()
+    description = CharField(null=True)
+    image_url = CharField()
+    hashtags = ArrayField(
+        CharField,
+        null=True
+    )
 
 
 # BOOTCAMPERS: Don't modify anything below

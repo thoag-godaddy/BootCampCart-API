@@ -19,7 +19,7 @@ help:
 
 
 ifeq ($(API_PORT),)
-export API_PORT := 8000
+export API_PORT := 8001
 endif
 # $(info API_PORT set to $(API_PORT). Change it with 'export API_PORT=')
 

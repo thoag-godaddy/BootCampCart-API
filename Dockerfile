@@ -15,5 +15,5 @@ VOLUME /cart_api
 WORKDIR /
 
 # Run the command
-ENV API_PORT 8000
+ENV API_PORT 8001
 CMD gunicorn --bind=0.0.0.0:$API_PORT cart_api.api:api --access-logfile - --reload --reload-extra-file /swagger/api.json
