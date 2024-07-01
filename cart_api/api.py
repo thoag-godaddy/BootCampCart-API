@@ -19,7 +19,7 @@ cartitems = CartItems()
 # Define our API's routes
 api.add_route("/heartbeat", hb)
 api.add_route("/v1/products/{product_id:int}", product)
-api.add_route("/v1/products", Products())
+api.add_route("/v1/products", products)
 api.add_route("/v1/cartitems/{cartitem_id:int}", cartitem)
 api.add_route("/v1/cartitems", cartitems)
 
