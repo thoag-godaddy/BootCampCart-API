@@ -10,7 +10,7 @@
 
 1. Build a RESTful HTTP API
 2. Become familiar with the Python language and Falcon web framework
-3. Use a ORM (object relational mapper) to interact with a SQL database
+3. Use an ORM (object relational mapper) to interact with a SQL database
 4. Understand the basics of unit testing your code
 
 > Procedural
@@ -18,13 +18,13 @@
 1. Please use the bootcamp slack channel to collaborate
 2. During presentation please use slack for coding questions and include your code when relevant
 3. If you need immediate help use the raise hand reaction in Zoom
-4. You may use any resource - google, stack overflow, each other, but we reccomend you start with the documentation
+4. You may use any resource - Google, Stack Overflow, each other, but we recommend you start with the documentation
 
 > Documentation & Useful Links
 
-- Python - https://docs.python.org/3/
-- PeeWee Database ORM - http://docs.peewee-orm.com/en/latest/index.html
-- Falcon Web Framework - https://falcon.readthedocs.io/en/stable/
+- Python - https://docs.python.org/3.10
+- PeeWee Database ORM - http://docs.peewee-orm.com/en/3.19.0/
+- Falcon Web Framework - https://falcon.readthedocs.io/en/3.0.1/
 - RESTful HTTP API Design - https://www.restapitutorial.com/index.html
 - OpenAPI aka Swagger - https://swagger.io/specification/
     - Swagger Editor - https://editor.swagger.io/
@@ -53,9 +53,13 @@ docker compose build api
 
 Setup the IDE environment:
 
-As soon as VSCode opens up, you would get a pop up on the right corner of the screen to set up the project using Remote container. If you don't you may need to install `Remote - Containers` from the extensions on the left side bar. This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original terminal.
+As soon as VSCode opens up, you should get a pop up on the right corner of the screen indicating: `Folder contains a Dev Container configuration file.` Click `Reopen in Dev Container.`
 
-Make sure Docker is running then run the project for the first time. Lets observe everything docker compose is doing
+If you don't get this popup you may need to install `Dev Containers` by `Microsoft` from the extensions on the left side bar and restart VSCode. If you still don't see the popup, use `CMD+Shift+P` to open the command palette and look for `Dev Containers: Reopen in Container`.
+
+This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original terminal.
+
+Make sure Docker is running then run the project for the first time. Lets observe everything docker compose is doing.
 ```
 docker compose up --build --force-recreate api
 ```
@@ -64,17 +68,18 @@ Eventually you should see a line that says `Listening at: http://0.0.0.0:8000`. 
 - Navigate to `localhost:8000/heartbeat` in a web browser
 - You should see 'Hello World! You did it!'
 
-You can get out of the running process by pressing `CMD+X`. Let's run the application again, but this time in the background with -d or "daemonized"
+You can get out of the running process by pressing `CTRL+C`. Let's run the application again, but this time in the background with -d or "daemonized"
 ```
 docker compose up --build --force-recreate -d api
 ```
+
 Once that completes run `docker compose ps`.  You should see the following images running and if you keep doing the ps command you will see the state change from starting to healthy.
 ```
 NAME                     COMMAND                  SERVICE             STATUS              PORTS
 bootcampcart-api-api-1   "/bin/sh -c 'gunicor…"   api                 running (healthy)   0.0.0.0:8000->8000/tcp
 bootcampcart-api-db-1    "docker-entrypoint.s…"   db                  running             0.0.0.0:5432->5432/tcp
 ```
-Now let's look at the logs from our docker containers. We are going to use -f which means follow the logs so that we see them in real time. This will continue until you exit the process with CMD+X. While viewing the logs try going to `http://0.0.0.0:8000/heartbeat` again and refresh the page a few times. you should see a log event for each refresh.
+Now let's look at the logs from our docker containers. We are going to use -f which means follow the logs so that we see them in real time. This will continue until you exit the process with CTRL+C. While viewing the logs try going to `http://0.0.0.0:8000/heartbeat` again and refresh the page a few times. You should see a log event for each refresh.
 ```
 docker compose logs -f
 ```
@@ -92,7 +97,7 @@ As you make changes to your code the application should refresh in real time, bu
 docker compose up --build --exit-code-from tests --abort-on-container-exit tests
 ```
 
-The command to run tests will show a bunch of tests failing. That's ok, As you complete the exercises below you should see their corresponding tests pass.
+The command to run tests will show a bunch of tests failing. That's ok, as you complete the exercises below you should see their corresponding tests pass.
 
 We just covered a lot of docker commands. Take a look at [cli-reference.txt](cli-reference.txt) when you need a quick reference.
 
@@ -101,7 +106,7 @@ We just covered a lot of docker commands. Take a look at [cli-reference.txt](cli
 Let's talk about Swagger now! Swagger is a widely used Framework to design APIs and generate automatic documentation for them. From Swagger.io,
 > Swagger allows you to describe the structure of your APIs so that machines can read them. The ability of APIs to describe their own structure is the root of all awesomeness in Swagger. Why is it so great? Well, by reading your API’s structure, we can automatically build beautiful and interactive API documentation.
 
-All we need to do is add specifications about the API in a yaml or json file (based on OpenAPI Specs), and swagger would generate and interactive documentation which you can use to even do automated testing.
+All we need to do is add specifications about the API in a YAML or JSON file (based on OpenAPI Specs), and Swagger would generate an interactive documentation which you can use to even do automated testing.
 
 ### Add your API specification to the project
 
@@ -117,21 +122,21 @@ You should have created an API specification during your API training and tools 
     - Below you should see the request made and a response of 200 with some data
 
 
-## Falcon, whats all the fuss about
+## Falcon, what's all the fuss about
 
 ![That's a big question](https://media.giphy.com/media/W5Ub2lhJPWlL4iXnNL/giphy.gif)
 
 According to the official Falcon documentation (https://falconframework.org/),
 
-> When it comes to building HTTP APIs, other frameworks weigh you down with tons of dependencies and unnecessary abstractions. Falcon cuts to the chase with a clean design that embraces HTTP and the REST architectural style.
+> Falcon leaves a lot of decisions and implementation details to you, the API developer. This gives you a lot of freedom to customize and tune your implementation. It also helps you understand your apps at a deeper level, making them easier to tune, debug, and refactor over the long run.
 
-Falcon is a light-weight bare-metal web API framework aimed at building very fast backends. Its simple and has a non-opinionated way of doing things which results in a flexible codebase.
+Falcon is a light-weight bare-metal web API framework aimed at building very fast backends. It's simple and has a non-opinionated way of doing things which results in a flexible codebase.
 
 It just makes building APIs **_fast, easy and flexible_**.
 
 In contrast a "heavy-weight" or "full" framework might have components for templates, front end webpages, authentication, and more. However we are only building an API so we do not need all of that.
 
-So now that we know what Falcon is, lets start with going over the project setup.
+So now that we know what Falcon is, let's start with going over the project setup.
 
 ## Project Structure and Setup
 
@@ -153,7 +158,7 @@ In requirements.txt the necessary packages required to build the Falcon API are:
 
 Docker does the heavy lifting of installing the required packages for the project and provide you an isolated environment where you can build and test your changes. We covered all that magic earlier, see [cli-reference.txt](cli-reference.txt) for a refresher.
 
-Its time to dive into the code!
+It's time to dive into the code!
 
 ## Resources
 
@@ -187,7 +192,7 @@ But wait, where is the data being stored?!
 
 The project uses a local Postgres SQL database to store data tables. Python has a library called `peewee` which is a ORM (Object Relational Mappers) for bridging the data stored in relational tables to Python objects. The official documentation can be found here: https://docs.peewee-orm.com/en/latest/peewee/api.html
 
-ORMs make it much easier to interact with a database, no SQL query language needed ! They are tied to concepts of object oriented programming. The Model is a special type of class which defines the schema of a database table and instances of that class are the rows or specific records of data.
+ORMs make it much easier to interact with a database, no SQL query language needed! They are tied to concepts of object oriented programming. The Model is a special type of class which defines the schema of a database table and instances of that class are the rows or specific records of data.
 
 PeeWee makes it really simple to define data models and data tables. Let's start dissecting the `database.py` file. There are three main components to it:
 
@@ -240,15 +245,15 @@ class DatabaseProducts(BaseModel):
 
 Second, we create our first model (an extention of the base model) which corresponds to the database Product table. Each column for the table has a corresponding SQL storage class (such as varchar, int, etc.) We also utilise the `prepopulate` function in peewee to add rows to our database table.
 
-> There is a special field here for representing the primary key. See http://docs.peewee-orm.com/en/latest/peewee/models.html#primary-keys-composite-keys-and-other-tricks for more info.
+> There is a special field here for representing the primary key. See http://docs.peewee-orm.com/en/3.19.0/peewee/models.html#primary-keys-composite-keys-and-other-tricks for more info.
 
-Finally, the remaining code in database.py is making sure that the tables are binded to the DB, created and populated.
+Finally, the remaining code in database.py is making sure that the tables are bound to the DB, created and populated.
 
 If you compare your API spec you may notice while we have a Product model, there is not yet a model for CartItems
 
 > **Exercise 1**: Create a new model for the resource `CartItem`. Optionally prepopulate with any number of rows. _Depending how you design your CartItem model you may need to update the EXAMPLE_CART_ITEM in cart_api_tests/test_exercises.py_
 
-The model should match your API specification. Make sure the fields and their data types are consistent with your swagger. If you are unsure what fields to use or how to proceed try checking the PeeWee documentation on Models and Fields: http://docs.peewee-orm.com/en/latest/peewee/models.html
+The model should match your API specification. Make sure the fields and their data types are consistent with your swagger. If you are unsure what fields to use or how to proceed try checking the PeeWee documentation on Models and Fields: http://docs.peewee-orm.com/en/3.19.0/peewee/models.html
 
 If successful you should be able to run the docker compose command for test (refer to the list of docker compose command) and see that `Exercise1::test_import_model` is now passing. This is a great checkpoint, we should use git to make a commit!
 
@@ -298,7 +303,7 @@ Also, Notice the HTTP response codes set in each of these controllers. These hel
 
 ## Routing - Let's tie it altogether
 
-Once we have our resources and database ready, all's left to do is instantiate our API and define it's routes.
+Once we have our resources and database ready, all that's left to do is instantiate our API and define its routes.
 
 We start with creating an instance of the Falcon API and the resource class aka responder in `api.py`
 
@@ -307,7 +312,7 @@ api = falcon.App()
 product = Product()
 ```
 
-Next, make product callable by adding route to the Facon API. This associates the responder code with the URL
+Next, make product callable by adding route to the Falcon API. This associates the responder code with the URL.
 
 ```python
 api.add_route('/v1/products/{product_id:int}', product)
@@ -315,7 +320,7 @@ api.add_route('/v1/products/{product_id:int}', product)
 
 > Notice the “/” preceding the “products” . Do not forget this, all URLs in falcon should have a root “/”. Also, `product_id:int` indicates that an id of type int needs to be passed into the responder for making the operation on the resource.
 
-And BOOM! We have covered everything it takes to create an HTTP API that serves data from a SQL database.. This is everything that makes  `localhost:8000/v1/products/1` work from your browser
+And BOOM! We have covered everything it takes to create an HTTP API that serves data from a SQL database. This is everything that makes `localhost:8000/v1/products/1` work from your browser
 
 ![Boom](https://media.giphy.com/media/mks5DcSGjhQ1a/giphy.gif)
 
@@ -336,21 +341,21 @@ But wait, how do I create (POST) a new product and what about this `GET /product
 >
 _(Hint: The falcon request object should contain media data with all the required columns. Use the Product Model to insert the data into the database)_
 
-- https://falcon.readthedocs.io/en/stable/api/media.html
-- https://falcon.readthedocs.io/en/stable/api/request_and_response_wsgi.html
-- https://falcon.readthedocs.io/en/stable/api/status.html
-- https://docs.peewee-orm.com/en/latest/peewee/querying.html
+- https://falcon.readthedocs.io/en/3.0.1/api/media.html
+- https://falcon.readthedocs.io/en/3.0.1/api/request_and_response_wsgi.html
+- https://falcon.readthedocs.io/en/3.0.1/api/status.html
+- https://docs.peewee-orm.com/en/3.0.1/peewee/querying.html
 
-hints:  The test will want the appropriate response code to be returned from the POST. You can use debug print statements the output will show up in the test
+Hints: The test will want the appropriate response code to be returned from the POST. You can use debug print statements the output will show up in the test
 
 Once complete, run docker compose command for test and you should see the Exercise2 tests have now PASSED
 
 # Break Time
 ![Freedom](https://media.giphy.com/media/QsyVRYGgsO7yc2HU5O/giphy.gif)
 
->## Its time for us to create a new resouce for our Cart
+>## It's time for us to create a new resource for our Cart
 
-Similar to Exercise 2, lets define a new resouce called `CartItems` in `routes/cartitems.py` file. The resource would be using the Database table `DatabaseCartItem` which we created in Exercise 1 (so lets not forget to import it). Feel free to pre-poulate it in database.py or we can use the below POST method to add rows in the table.
+Similar to Exercise 2, let's define a new resource called `CartItems` in `routes/cartitems.py` file. The resource would be using the Database table `DatabaseCartItem` which we created in Exercise 1 (so lets not forget to import it). Feel free to pre-populate it in database.py or we can use the below POST method to add rows in the table.
 
 We can get a sense of what the POST method would need to create a new row in DatabaseCartItem from the defined class in database.py. You defined what makes your cart item, look at your spec, but it may be something like:
 1. name (of type Char)
@@ -359,7 +364,7 @@ We can get a sense of what the POST method would need to create a new row in Dat
 
 _(The field id is an autogenerated one so we do not have to worry about it. It is just used as a primary key for the table)_
 
-Let't try it out.
+Let's try it out.
 (Hint: Do not forget to import `DatabaseCartItem` for the on_post request. Make sure to tie it to routing.)
 
 
@@ -380,9 +385,9 @@ Now we should be able to use swagger to interact with the new resource. Add rows
 
 Useful links:
 - https://www.restapitutorial.com/lessons/httpmethods.html
-- https://docs.peewee-orm.com/en/latest/peewee/querying.html
-- https://falcon.readthedocs.io/en/stable/api/request_and_response_wsgi.html
-- https://falcon.readthedocs.io/en/stable/api/status.html
+- https://docs.peewee-orm.com/en/3.19.0/peewee/querying.html
+- https://falcon.readthedocs.io/en/3.0.1/api/request_and_response_wsgi.html
+- https://falcon.readthedocs.io/en/3.0.1/api/status.html
 
 Now that all tests are passing you should see a code coverage report for the unit tests
 
@@ -428,9 +433,9 @@ class Exercise3(TestClient):
         self.assertEqual(response.json["name"], self.aitem["name"])
 ```
 
-In the Exercise3 class, each function represents contains test cases to test a singular HTTP method for the resources. Ideally, you would want to have at least one test function per HTTP method per resource. Since the resources `CartItem` and `CartItems` have the same underlying table, we have combined them into one test class.
+In the Exercise3 class, each function contains test cases to test a singular HTTP method for the resources. Ideally, you would want to have at least one test function per HTTP method per resource. Since the resources `CartItem` and `CartItems` have the same underlying table, we have combined them into one test class.
 
-Each of the function is doing the API call with the right combination of your API URI (i.e. localhost:8000) and the route for that resource (e.g. /v1/cartitems). The API response and the response code is then used against `assert` statements to check if the value is valid or expected. The full list of assert statements can be found here: https://docs.python.org/3/library/unittest.html
+Each of the function is doing the API call with the right combination of your API URI (i.e. localhost:8000) and the route for that resource (e.g. /v1/cartitems). The API response and the response code is then used against `assert` statements to check if the value is valid or expected. The full list of assert statements can be found here: https://docs.python.org/3.10/library/unittest.html
 
 Let's run the above test cases using the docker compose command for test and see what happens.
 
@@ -452,8 +457,8 @@ Code coverage, while not perfect is the foundational metric for code quality. No
 
 > **Bonus Exercise 3** : Requesting a product/item that does not exist should return a status 404 - Using swagger or the browser try to view a product number which you know does not exist, you will get an unhandled Internal Server Error, status 500. Use `make logs` and do it again and you will even see an exception stack trace for your error.
 - One way to show off your bug-fixing skills is to use [Test Driven Development](https://en.wikipedia.org/wiki/Test-driven_development). In short try to write a test first that shows there is a problem before you start writing code to fix it.
-- One way to handle this is with python exception handling: https://docs.python.org/3/tutorial/errors.html#handling-exceptions
-- Another way is to use Falcon's error handling, there is actually an example of it in api.py. Documentation: https://falcon.readthedocs.io/en/stable/api/app.html#falcon.App.add_error_handler
+- One way to handle this is with python exception handling: https://docs.python.org/3.10/tutorial/errors.html#handling-exceptions
+- Another way is to use Falcon's error handling, there is actually an example of it in api.py. Documentation: https://falcon.readthedocs.io/en/3.0.1/api/app.html#falcon.App.add_error_handler
 - Regardless of the method it is ideal to capture the specific error that is being raised, don't be afraid to google for help on this one.
 - Make sure your code coverage is still 100% after making this change.
 ## Outro
@@ -461,8 +466,8 @@ Code coverage, while not perfect is the foundational metric for code quality. No
 As evident from the above exercise, building an API in Falcon is super simple, flexible and fast!
 
 ## References
-- https://falcon.readthedocs.io/en/stable/#
-- https://docs.peewee-orm.com/en/latest/peewee/api.html
+- https://falcon.readthedocs.io/en/3.0.1/#
+- https://docs.peewee-orm.com/en/3.19.0/peewee/api.html
 - https://medium.com/@gaurav_52429/developing-rest-apis-in-under-50-lines-of-code-using-falcon-in-python-25d3b47a493d
 - https://simpleprogrammer.com/api-testing/
 - https://swagger.io/
