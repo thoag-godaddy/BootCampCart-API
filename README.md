@@ -31,7 +31,7 @@
 
 ## Project Setup
 
-Create a fork of the project
+Ensure you are logged into github, then create a fork of the project
 ```
 https://github.com/thoag-godaddy/BootCampCart-API
 ```
@@ -41,6 +41,17 @@ Verify that the repository is available in your list of your repositories. You s
 <your username>/BootCampCart-API
 forked from thoag-godaddy/BootCampCart-API
 ```
+
+Alright now we are going to switch to using the terminal. There are a couple of things we need to setup.
+First, we need to tell Mac to use a runtime that will be compatible with our database container.
+We also want to make sure we are all using the same directories for our project.
+```
+echo "export DOCKER_DEFAULT_PLATFORM=linux/amd64" >> ~/.zshenv
+source ~/.zshenv
+mkdir ~/Documents/group-project
+cd ~/Documents/group-project
+```
+
 
 Clone the project from your fork
 ```
@@ -57,7 +68,7 @@ As soon as VSCode opens up, you should get a pop up on the right corner of the s
 
 If you don't get this popup you may need to install `Dev Containers` by `Microsoft` from the extensions on the left side bar and restart VSCode. If you still don't see the popup, use `CMD+Shift+P` to open the command palette and look for `Dev Containers: Reopen in Container`.
 
-This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original terminal.
+This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original Mac terminal. Do **not** use the VSCode terminal for your docker compose commands.
 
 Make sure Docker is running then run the project for the first time. Lets observe everything docker compose is doing.
 ```
@@ -83,7 +94,7 @@ Now let's look at the logs from our docker containers. We are going to use -f wh
 ```
 docker compose logs -f
 ```
-Our final manual test will be to verify the application can talk to the database. We will do that by fetching the product with ID 1 through the browser. Navigate to `http://localhost:8000/v1/products/1`
+Our final manual test will be to verify the application can talk to the database. We will do that by fetching the product with ID 1 through the browser. Navigate to `http://localhost:8000/v1/products/1` or use curl and pass the data to the jq parser `curl http://localhost:8000/v1/products/1 | jq .`
 
 You should see `{"id": 1, "name": "Standard SSL", "description": "Your standard SSL certificate", "image_url": null, "price": 14.99, "is_on_sale": false, "sale_price": 8.99}`. The data for this product was read out of a PostgreSQL database running separately from the API.
 
@@ -97,7 +108,7 @@ As you make changes to your code the application should refresh in real time, bu
 docker compose up --build --exit-code-from tests --abort-on-container-exit tests
 ```
 
-The command to run tests will show a bunch of tests failing. That's ok, as you complete the exercises below you should see their corresponding tests pass.
+The command to run tests will show a bunch of tests failing. That's expected, as you complete the exercises below you should see their corresponding tests pass.
 
 We just covered a lot of docker commands. Take a look at [cli-reference.txt](cli-reference.txt) when you need a quick reference.
 
@@ -114,7 +125,7 @@ You should have created an API specification during your API training and tools 
 
 - Replace the BootCampCart-API/swagger/api.json with your API specification
 - Navigate to your API root: `http://localhost:8000/`
-- You should see interactive documentation for your UI
+- You should see interactive documentation for your UI. Verify you have Products and CartItems
 - If you have errors, try switching to the [swagger editor](https://editor.swagger.io/) for debugging.
 - Try interacting with the API via swagger
     - click on `/products​/{id}` and then `Try it out`
@@ -143,7 +154,7 @@ So now that we know what Falcon is, let's start with going over the project setu
 There are three main components to the project setup:
 
 1. Dockerfile
-2. docker compose.yml
+2. docker-compose.yml
 3. requirements.txt
 
 In requirements.txt the necessary packages required to build the Falcon API are:
@@ -263,7 +274,7 @@ git add cart_api/database.py
 git commit -m 'exercise one complete'
 ```
 
-We encourage you to make frequent commits throughout this project - after exercises or anytime you have made a change worth keeping.
+We encourage you to make frequent commits throughout this project - after exercises or anytime you have made a change worth keeping. Check the cli-reference.txt for some quick git commands.
 
 
 ## HTTP Methods
@@ -448,7 +459,7 @@ The following exercises will not be required for the next phases of the project,
 
 Code coverage, while not perfect is the foundational metric for code quality. Not only is 100% coverage a badge of honor, but it will give you the confidence to add features or refactor without fear of breaking things.
 
-> **Bonus Exercise 2** : Don't allow duplicate products - The product manager for WeResellAllTheThings.com called with a complaint: There are a bunch of products in the database with the same name and he would like the API to prevent that from happening.
+> **Bonus Exercise 2** : Don't allow duplicate products - The product manager for DoughMains.com called with a complaint: There are a bunch of products in the database with the same name and he would like the API to prevent that from happening.
 
 - Make a code change that would prevent any product from being created if there is an existing product with same name
 - Think about how to communicate to the caller that they have made a bad request

@@ -22,6 +22,17 @@ docker compose down
 # This runs all the unit tests for the application.
 docker compose up --build --exit-code-from tests --abort-on-container-exit tests
 
+# GIT REFERENCE
+# See what has changed since your last commit
+git status
+git diff
+# make a commit of every change you've made and push it to your github.com fork
+git add --all
+git commit -m 'describe your changes here'
+git push
+# Undo all your changes since your last commit
+git checkout FILENAME
+
 # DANGERZONE: If your database gets really messed up you might need to destroy it
 # The app will create a new one, but you will lose any custom products or shopping carts not defined in code
 # This command shows you your docker data volumes
