@@ -18,6 +18,7 @@ class Exercise1(TestClient):
     def test_example_data_matches_model(self):
         from cart_api.database import DatabaseCartItem
         isinstance(DatabaseCartItem.quantity,IntegerField)
+        isinstance(DatabaseCartItem.price,IntegerField)
         DatabaseCartItem(**EXAMPLE_CART_ITEM)
 
 

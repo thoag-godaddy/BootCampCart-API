@@ -104,7 +104,8 @@ You should see `{"id": 1, "name": "Standard SSL", "description": "Your standard 
 
 We can stop the running containers using the below command:
 ```
-docker compose down
+# IF you need to shut down your containers run this command without the comment prefix (#)
+# docker compose down
 ```
 As you make changes to your code the application should refresh in real time, but sometimes weird things happen and you might need to restart everything by doing a compose down/up. Finally, lets make sure the unit tests run
 ```
@@ -124,12 +125,11 @@ All we need to do is add specifications about the API in a YAML or JSON file (ba
 
 ### Add your API specification to the project
 
-You should have created an API specification during your API training and tools session. If you have not completed that [use this one for now](https://github.com/thoag-godaddy/BootCampCart-API/blob/complete_spec/swagger/api.json)
+We will want an OpenAPI spec which includes a CartItems resource. [Use this one for now](https://github.com/thoag-godaddy/BootCampCart-API/blob/complete_spec/swagger/api.json) but when you start customizing your API for your group project feel free to replace/modify it.
 
 - Replace the BootCampCart-API/swagger/api.json with your API specification
 - Navigate to your API root: `http://localhost:8000/`
 - You should see interactive documentation for your UI. Verify you have Products and CartItems
-- If you have errors, try switching to the [swagger editor](https://editor.swagger.io/) for debugging.
 - Try interacting with the API via swagger
     - click on `/products​/{id}` and then `Try it out`
     - Fill in the required product_id with `1` and click `Execute`
@@ -204,7 +204,7 @@ But wait, where is the data being stored?!
 
 ## Database
 
-The project uses a local Postgres SQL database to store data tables. Python has a library called `peewee` which is a ORM (Object Relational Mappers) for bridging the data stored in relational tables to Python objects. The official documentation can be found here: https://docs.peewee-orm.com/en/latest/peewee/api.html
+The project uses a local Postgres SQL database to store data tables. Python has a library called `peewee` which is a ORM (Object Relational Mappers) for bridging the data stored in relational tables to Python objects. The official documentation can be found here: https://docs.peewee-orm.com/en/3.19.0/peewee/api.html
 
 ORMs make it much easier to interact with a database, no SQL query language needed! They are tied to concepts of object oriented programming. The Model is a special type of class which defines the schema of a database table and instances of that class are the rows or specific records of data.
 
@@ -259,7 +259,7 @@ class DatabaseProducts(BaseModel):
 
 Second, we create our first model (an extention of the base model) which corresponds to the database Product table. Each column for the table has a corresponding SQL storage class (such as varchar, int, etc.) We also utilise the `prepopulate` function in peewee to add rows to our database table.
 
-> There is a special field here for representing the primary key. See http://docs.peewee-orm.com/en/3.19.0/peewee/models.html#primary-keys-composite-keys-and-other-tricks for more info.
+> Databases usually require a field(s) to serve a the **uniquely identifying** primary key. We will use a special AutoField for that, see http://docs.peewee-orm.com/en/3.19.0/peewee/models.html#primary-keys-composite-keys-and-other-tricks for more info.
 
 Finally, the remaining code in database.py is making sure that the tables are bound to the DB, created and populated.
 
@@ -267,7 +267,9 @@ If you compare your API spec you may notice while we have a Product model, there
 
 > **Exercise 1**: Create a new model for the resource `CartItem`. Optionally prepopulate with any number of rows. _Depending how you design your CartItem model you may need to update the EXAMPLE_CART_ITEM in cart_api_tests/test_exercises.py_
 
-The model should match your API specification. Make sure the fields and their data types are consistent with your swagger. If you are unsure what fields to use or how to proceed try checking the PeeWee documentation on Models and Fields: http://docs.peewee-orm.com/en/3.19.0/peewee/models.html
+*While we are updating the database there is a risk of "breaking" it. If you start seeing database errors use the "DANGERZONE" section at the bottom of the [cli-reference.txt](./cli-reference.txt)*
+
+The model should match your API specification. Make sure the fields and their data types are consistent with your swagger. If you are unsure what fields to use or how to proceed try checking the PeeWee documentation on [Models](http://docs.peewee-orm.com/en/3.19.0/peewee/models.html) and [Fields](http://docs.peewee-orm.com/en/3.19.0/peewee/models.html)
 
 If successful you should be able to run the docker compose command for test (refer to the list of docker compose command) and see that `Exercise1::test_import_model` is now passing. This is a great checkpoint, we should use git to make a commit!
 
