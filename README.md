@@ -15,10 +15,15 @@
 
 ```mermaid
 graph TB
+    Browser
+
     subgraph "Client Tier"
-        React["React App (Tomorrow)"]
         Curl[curl]
         Swagger[SwaggerUI]
+    end
+
+    subgraph "FrontEnd Tier"
+        React["React App (Tomorrow)"]
     end
 
     subgraph "Application Tier"
@@ -30,6 +35,8 @@ graph TB
         DB[(PostgreSQL<br/>Database)]
     end
 
+    Browser --> React
+    Browser --> Swagger
     React -->|HTTP| Falcon
     Curl -->|HTTP| Falcon
     Swagger -->|HTTP| Falcon
