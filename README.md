@@ -53,7 +53,9 @@ cd ~/Documents/group-project
 ```
 
 
-Clone the project from your fork
+We will do all of our navigation for this project via CLI, but to visually see the directory structure you can open your Documents folder in Finder and see the new directory you've created. Click into it.
+
+Clone the project from your fork. When you run these commands you will see the cloned repository appear in Finder.
 ```
 git clone <your fork>
 cd BootCampCart-API
@@ -68,6 +70,7 @@ As soon as VSCode opens up, you should get a pop up on the right corner of the s
 
 If you don't get this popup you may need to install `Dev Containers` by `Microsoft` from the extensions on the left side bar and restart VSCode. If you still don't see the popup, use `CMD+Shift+P` to open the command palette and look for `Dev Containers: Reopen in Container`.
 
+You should see VSCode refresh. Then, look in the bottom left corner of your VSCode window. You should see it says something like `Dev Container: Python 3 @ desktop-linux`.
 This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original Mac terminal. Do **not** use the VSCode terminal for your docker compose commands.
 
 Make sure Docker is running then run the project for the first time. Lets observe everything docker compose is doing.

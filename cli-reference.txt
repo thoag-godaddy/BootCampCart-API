@@ -2,7 +2,18 @@
 # the hash (#) indicates a comment, lines without it are valid commands
 # Pressing CTRL+C will terminate whatever is running in your terminal, some things wont stop running unless you terminate them
 # You must be in the project folder for these commands to work
+# CLI NAVIGATION
+# See all the files in your current directory
+ls -al
 
+# Get back to your root working directory
+cd ~/Documents/group-project/BootCampCart-API
+
+# See where you are in the directory tree
+pwd
+
+#Navigate "up" a level
+cd ..
 # These commands run all the containers for the api
 # the -d version means daemonize which says to run it in the background and give you your CLI prompt back
 docker compose up --build --force-recreate api
