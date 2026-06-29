@@ -13,6 +13,35 @@
 3. Use an ORM (object relational mapper) to interact with a SQL database
 4. Understand the basics of unit testing your code
 
+```mermaid
+graph TB
+    subgraph "Client Tier"
+        React["React App (Tomorrow)"]
+        Curl[curl]
+        Swagger[SwaggerUI]
+    end
+
+    subgraph "Application Tier"
+        Falcon[Falcon API<br/>Python Web Framework]
+        Peewee[Peewee ORM]
+    end
+
+    subgraph "Data Tier"
+        DB[(PostgreSQL<br/>Database)]
+    end
+
+    React -->|HTTP| Falcon
+    Curl -->|HTTP| Falcon
+    Swagger -->|HTTP| Falcon
+
+    Falcon -->|Query API| Peewee
+    Peewee -->|SQL| DB
+
+    style React fill:#61dafb,stroke:#333,stroke-width:2px
+    style Falcon fill:#f9c74f,stroke:#333,stroke-width:2px
+    style DB fill:#336791,stroke:#333,stroke-width:2px,color:#fff
+```
+
 > Procedural
 
 1. Please use the bootcamp slack channel to collaborate
