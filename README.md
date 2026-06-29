@@ -13,6 +13,35 @@
 3. Use an ORM (object relational mapper) to interact with a SQL database
 4. Understand the basics of unit testing your code
 
+```mermaid
+graph TB
+    subgraph "Client Tier"
+        React["React App (Tomorrow)"]
+        Curl[curl]
+        Swagger[SwaggerUI]
+    end
+
+    subgraph "Application Tier"
+        Falcon[Falcon API<br/>Python Web Framework]
+        Peewee[Peewee ORM]
+    end
+
+    subgraph "Data Tier"
+        DB[(PostgreSQL<br/>Database)]
+    end
+
+    React -->|HTTP| Falcon
+    Curl -->|HTTP| Falcon
+    Swagger -->|HTTP| Falcon
+
+    Falcon -->|Query API| Peewee
+    Peewee -->|SQL| DB
+
+    style React fill:#61dafb,stroke:#333,stroke-width:2px
+    style Falcon fill:#f9c74f,stroke:#333,stroke-width:2px
+    style DB fill:#336791,stroke:#333,stroke-width:2px,color:#fff
+```
+
 > Procedural
 
 1. Please use the bootcamp slack channel to collaborate
@@ -31,7 +60,7 @@
 
 ## Project Setup
 
-Create a fork of the project
+Ensure you are logged into github, then create a fork of the project
 ```
 https://github.com/thoag-godaddy/BootCampCart-API
 ```
@@ -42,7 +71,20 @@ Verify that the repository is available in your list of your repositories. You s
 forked from thoag-godaddy/BootCampCart-API
 ```
 
-Clone the project from your fork
+Alright now we are going to switch to using the terminal. There are a couple of things we need to setup.
+First, we need to tell Mac to use a runtime that will be compatible with our database container.
+We also want to make sure we are all using the same directories for our project.
+```
+echo "export DOCKER_DEFAULT_PLATFORM=linux/amd64" >> ~/.zshenv
+source ~/.zshenv
+mkdir ~/Documents/group-project
+cd ~/Documents/group-project
+```
+
+
+We will do all of our navigation for this project via CLI, but to visually see the directory structure you can open your Documents folder in Finder and see the new directory you've created. Click into it.
+
+Clone the project from your fork. When you run these commands you will see the cloned repository appear in Finder.
 ```
 git clone <your fork>
 cd BootCampCart-API
@@ -57,7 +99,8 @@ As soon as VSCode opens up, you should get a pop up on the right corner of the s
 
 If you don't get this popup you may need to install `Dev Containers` by `Microsoft` from the extensions on the left side bar and restart VSCode. If you still don't see the popup, use `CMD+Shift+P` to open the command palette and look for `Dev Containers: Reopen in Container`.
 
-This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original terminal.
+You should see VSCode refresh. Then, look in the bottom left corner of your VSCode window. You should see it says something like `Dev Container: Python 3 @ desktop-linux`.
+This sets up the python environment for VSCode to use, but for all your docker commands you will want to use your original Mac terminal. Do **not** use the VSCode terminal for your docker compose commands.
 
 Make sure Docker is running then run the project for the first time. Lets observe everything docker compose is doing.
 ```
@@ -83,21 +126,22 @@ Now let's look at the logs from our docker containers. We are going to use -f wh
 ```
 docker compose logs -f
 ```
-Our final manual test will be to verify the application can talk to the database. We will do that by fetching the product with ID 1 through the browser. Navigate to `http://localhost:8000/v1/products/1`
+Our final manual test will be to verify the application can talk to the database. We will do that by fetching the product with ID 1 through the browser. Navigate to `http://localhost:8000/v1/products/1` or use curl and pass the data to the jq parser `curl http://localhost:8000/v1/products/1 | jq .`
 
 You should see `{"id": 1, "name": "Standard SSL", "description": "Your standard SSL certificate", "image_url": null, "price": 14.99, "is_on_sale": false, "sale_price": 8.99}`. The data for this product was read out of a PostgreSQL database running separately from the API.
 
 
 We can stop the running containers using the below command:
 ```
-docker compose down
+# IF you need to shut down your containers run this command without the comment prefix (#)
+# docker compose down
 ```
 As you make changes to your code the application should refresh in real time, but sometimes weird things happen and you might need to restart everything by doing a compose down/up. Finally, lets make sure the unit tests run
 ```
 docker compose up --build --exit-code-from tests --abort-on-container-exit tests
 ```
 
-The command to run tests will show a bunch of tests failing. That's ok, as you complete the exercises below you should see their corresponding tests pass.
+The command to run tests will show a bunch of tests failing. That's expected, as you complete the exercises below you should see their corresponding tests pass.
 
 We just covered a lot of docker commands. Take a look at [cli-reference.txt](cli-reference.txt) when you need a quick reference.
 
@@ -110,12 +154,11 @@ All we need to do is add specifications about the API in a YAML or JSON file (ba
 
 ### Add your API specification to the project
 
-You should have created an API specification during your API training and tools session. If you have not completed that [use this one for now](https://github.com/thoag-godaddy/BootCampCart-API/blob/complete_spec/swagger/api.json)
+We will want an OpenAPI spec which includes a CartItems resource. [Use this one for now](https://github.com/thoag-godaddy/BootCampCart-API/blob/complete_spec/swagger/api.json) but when you start customizing your API for your group project feel free to replace/modify it.
 
 - Replace the BootCampCart-API/swagger/api.json with your API specification
 - Navigate to your API root: `http://localhost:8000/`
-- You should see interactive documentation for your UI
-- If you have errors, try switching to the [swagger editor](https://editor.swagger.io/) for debugging.
+- You should see interactive documentation for your UI. Verify you have Products and CartItems
 - Try interacting with the API via swagger
     - click on `/products​/{id}` and then `Try it out`
     - Fill in the required product_id with `1` and click `Execute`
@@ -143,7 +186,7 @@ So now that we know what Falcon is, let's start with going over the project setu
 There are three main components to the project setup:
 
 1. Dockerfile
-2. docker compose.yml
+2. docker-compose.yml
 3. requirements.txt
 
 In requirements.txt the necessary packages required to build the Falcon API are:
@@ -190,7 +233,7 @@ But wait, where is the data being stored?!
 
 ## Database
 
-The project uses a local Postgres SQL database to store data tables. Python has a library called `peewee` which is a ORM (Object Relational Mappers) for bridging the data stored in relational tables to Python objects. The official documentation can be found here: https://docs.peewee-orm.com/en/latest/peewee/api.html
+The project uses a local Postgres SQL database to store data tables. Python has a library called `peewee` which is a ORM (Object Relational Mappers) for bridging the data stored in relational tables to Python objects. The official documentation can be found here: https://docs.peewee-orm.com/en/3.19.0/peewee/api.html
 
 ORMs make it much easier to interact with a database, no SQL query language needed! They are tied to concepts of object oriented programming. The Model is a special type of class which defines the schema of a database table and instances of that class are the rows or specific records of data.
 
@@ -245,7 +288,7 @@ class DatabaseProducts(BaseModel):
 
 Second, we create our first model (an extention of the base model) which corresponds to the database Product table. Each column for the table has a corresponding SQL storage class (such as varchar, int, etc.) We also utilise the `prepopulate` function in peewee to add rows to our database table.
 
-> There is a special field here for representing the primary key. See http://docs.peewee-orm.com/en/3.19.0/peewee/models.html#primary-keys-composite-keys-and-other-tricks for more info.
+> Databases usually require a field(s) to serve a the **uniquely identifying** primary key. We will use a special AutoField for that, see http://docs.peewee-orm.com/en/3.19.0/peewee/models.html#primary-keys-composite-keys-and-other-tricks for more info.
 
 Finally, the remaining code in database.py is making sure that the tables are bound to the DB, created and populated.
 
@@ -253,7 +296,9 @@ If you compare your API spec you may notice while we have a Product model, there
 
 > **Exercise 1**: Create a new model for the resource `CartItem`. Optionally prepopulate with any number of rows. _Depending how you design your CartItem model you may need to update the EXAMPLE_CART_ITEM in cart_api_tests/test_exercises.py_
 
-The model should match your API specification. Make sure the fields and their data types are consistent with your swagger. If you are unsure what fields to use or how to proceed try checking the PeeWee documentation on Models and Fields: http://docs.peewee-orm.com/en/3.19.0/peewee/models.html
+*While we are updating the database there is a risk of "breaking" it. If you start seeing database errors use the "DANGERZONE" section at the bottom of the [cli-reference.txt](./cli-reference.txt)*
+
+The model should match your API specification. Make sure the fields and their data types are consistent with your swagger. If you are unsure what fields to use or how to proceed try checking the PeeWee documentation on [Models](http://docs.peewee-orm.com/en/3.19.0/peewee/models.html) and [Fields](http://docs.peewee-orm.com/en/3.19.0/peewee/models.html)
 
 If successful you should be able to run the docker compose command for test (refer to the list of docker compose command) and see that `Exercise1::test_import_model` is now passing. This is a great checkpoint, we should use git to make a commit!
 
@@ -263,7 +308,7 @@ git add cart_api/database.py
 git commit -m 'exercise one complete'
 ```
 
-We encourage you to make frequent commits throughout this project - after exercises or anytime you have made a change worth keeping.
+We encourage you to make frequent commits throughout this project - after exercises or anytime you have made a change worth keeping. Check the cli-reference.txt for some quick git commands.
 
 
 ## HTTP Methods
@@ -448,7 +493,7 @@ The following exercises will not be required for the next phases of the project,
 
 Code coverage, while not perfect is the foundational metric for code quality. Not only is 100% coverage a badge of honor, but it will give you the confidence to add features or refactor without fear of breaking things.
 
-> **Bonus Exercise 2** : Don't allow duplicate products - The product manager for WeResellAllTheThings.com called with a complaint: There are a bunch of products in the database with the same name and he would like the API to prevent that from happening.
+> **Bonus Exercise 2** : Don't allow duplicate products - The product manager for DoughMains.com called with a complaint: There are a bunch of products in the database with the same name and he would like the API to prevent that from happening.
 
 - Make a code change that would prevent any product from being created if there is an existing product with same name
 - Think about how to communicate to the caller that they have made a bad request
